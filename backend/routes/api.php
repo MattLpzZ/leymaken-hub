@@ -1,0 +1,21 @@
+<?php
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InfraController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', fn($req) => $req->user());
+
+    // Mission Control
+    Route::prefix('infra')->group(function () {
+        Route::get('/docker',     [InfraController::class, 'docker']);
+        Route::get('/github',     [InfraController::class, 'github']);
+        Route::get('/cloudflare', [InfraController::class, 'cloudflare']);
+        Route::get('/feed',       [InfraController::class, 'feed']);
+        Route::post('/docker/{name}/restart', [InfraController::class, 'restartContainer']);
+        Route::get('/docker/{name}/logs',     [InfraController::class, 'containerLogs']);
+    });
+});
