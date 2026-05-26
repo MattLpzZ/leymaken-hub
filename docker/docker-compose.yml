@@ -4,10 +4,23 @@ services:
       context: ..
       dockerfile: docker/Dockerfile.backend
     container_name: leymaken_hub_api
+    restart: unless-stopped
     volumes:
       - ../backend:/var/www/html
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ../.env
+    networks:
+      - leymaken_net
+
+  hub_api_http:
+    image: nginx:alpine
+    container_name: leymaken_hub_api_http
+    restart: unless-stopped
+    volumes:
+      - ../docker/nginx/backend.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../backend:/var/www/html:ro
+    depends_on:
+      - hub_api
     networks:
       - leymaken_net
 
@@ -16,6 +29,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile.frontend
     container_name: leymaken_hub_frontend
+    restart: unless-stopped
     ports:
       - "3010:80"
     depends_on:
