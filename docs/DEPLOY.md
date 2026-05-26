@@ -56,7 +56,16 @@ docker compose -f docker/docker-compose.prod.yml build hub_api hub_worker hub_sc
 docker compose -f docker/docker-compose.prod.yml up -d --force-recreate hub_api hub_worker hub_scheduler
 docker exec leymaken_hub_api php artisan migrate --force
 docker exec leymaken_hub_api php artisan optimize
+```
 
+> **Note:** If PHP code changes aren't reflected after rebuild, the `app_code` volume may have stale content. Remove and recreate it:
+> ```bash
+> docker compose -f docker/docker-compose.prod.yml down
+> docker volume rm leymaken-hub_app_code
+> docker compose -f docker/docker-compose.prod.yml up -d
+> ```
+
+```bash
 # If only frontend changed:
 docker compose -f docker/docker-compose.prod.yml build hub_frontend
 docker compose -f docker/docker-compose.prod.yml up -d --force-recreate hub_frontend
