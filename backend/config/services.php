@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'github' => [
+        'token' => env('GITHUB_TOKEN'),
+    ],
+
+    'cloudflare' => [
+        'token'      => env('CLOUDFLARE_TOKEN'),
+        'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
+    ],
+
 ];
