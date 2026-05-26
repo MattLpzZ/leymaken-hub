@@ -1,0 +1,76 @@
+services:
+  hub_api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: leymaken_hub_api
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hub_storage:/var/www/html/storage
+      - app_code:/var/www/html
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+    env_file: ../.env
+    networks:
+      - leymaken_net
+
+  hub_api_http:
+    image: nginx:alpine
+    container_name: leymaken_hub_api_http
+    restart: unless-stopped
+    volumes:
+      - ./nginx/backend.conf:/etc/nginx/conf.d/default.conf:ro
+      - app_code:/var/www/html:ro
+    depends_on:
+      - hub_api
+    networks:
+      - leymaken_net
+
+  hub_worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: leymaken_hub_worker
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=3 --tries=3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - hub_storage:/var/www/html/storage
+    env_file: ../.env
+    networks:
+      - leymaken_net
+
+  hub_scheduler:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: leymaken_hub_scheduler
+    restart: unless-stopped
+    command: sh -c "while true; do php artisan schedule:run; sleep 60; done"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file: ../.env
+    networks:
+      - leymaken_net
+
+  hub_frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+    container_name: leymaken_hub_frontend
+    restart: unless-stopped
+    depends_on:
+      - hub_api
+      - hub_api_http
+    networks:
+      - leymaken_net
+
+volumes:
+  hub_storage:
+  app_code:
+
+networks:
+  leymaken_net:
+    external: true
