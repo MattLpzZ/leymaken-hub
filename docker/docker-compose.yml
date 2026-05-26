@@ -1,0 +1,28 @@
+services:
+  hub_api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: leymaken_hub_api
+    volumes:
+      - ../backend:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file: ../.env
+    networks:
+      - leymaken_net
+
+  hub_frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+    container_name: leymaken_hub_frontend
+    ports:
+      - "3010:80"
+    depends_on:
+      - hub_api
+    networks:
+      - leymaken_net
+
+networks:
+  leymaken_net:
+    external: true
