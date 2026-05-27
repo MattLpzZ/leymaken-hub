@@ -16,8 +16,8 @@ export function GitHubFeed() {
   useEffect(() => { fetchGithub() }, [])
 
   return (
-    <div className="card">
-      <div className="flex items-center justify-between mb-4">
+    <div className="card h-full flex flex-col min-h-0">
+      <div className="flex items-center justify-between mb-3 flex-shrink-0">
         <h2 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>GitHub</h2>
         <span className="badge badge-gray">{repos.length} repos</span>
       </div>
@@ -25,17 +25,17 @@ export function GitHubFeed() {
       {loading.github && !repos.length ? (
         <p className="text-sm" style={{ color: 'var(--text-3)' }}>Cargando...</p>
       ) : (
-        <div className="space-y-3">
-          {repos.slice(0, 8).map(r => (
-            <div key={r.name} className="space-y-1">
+        <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-0.5">
+          {repos.map(r => (
+            <div key={r.name} className="space-y-0.5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{r.name}</span>
-                  <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-3)' }}>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{r.name}</span>
+                  <span className="flex items-center gap-1 text-xs flex-shrink-0" style={{ color: 'var(--text-3)' }}>
                     <GitBranch size={10} /> {r.default_branch}
                   </span>
                 </div>
-                <a href={r.html_url} target="_blank" rel="noreferrer">
+                <a href={r.html_url} target="_blank" rel="noreferrer" className="flex-shrink-0 ml-2">
                   <ExternalLink size={12} style={{ color: 'var(--text-3)' }} />
                 </a>
               </div>
