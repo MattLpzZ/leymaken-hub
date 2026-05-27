@@ -20,7 +20,7 @@ class DockerService
     public function listContainers(): array
     {
         try {
-            $res  = $this->client->get('/v1.43/containers/json?all=true');
+            $res  = $this->client->get('/v1.44/containers/json?all=true');
             $raw  = json_decode($res->getBody()->getContents(), true);
             return array_map(fn($c) => [
                 'id'     => substr($c['Id'], 0, 12),
@@ -36,7 +36,7 @@ class DockerService
     public function getLogs(string $name, int $lines = 100): string
     {
         try {
-            $res = $this->client->get("/v1.43/containers/{$name}/logs?stdout=true&stderr=true&tail={$lines}");
+            $res = $this->client->get("/v1.44/containers/{$name}/logs?stdout=true&stderr=true&tail={$lines}");
             return $res->getBody()->getContents();
         } catch (GuzzleException) {
             return '';
@@ -46,7 +46,7 @@ class DockerService
     public function restart(string $name): bool
     {
         try {
-            $res = $this->client->post("/v1.43/containers/{$name}/restart");
+            $res = $this->client->post("/v1.44/containers/{$name}/restart");
             return $res->getStatusCode() === 204;
         } catch (GuzzleException) {
             return false;
@@ -56,7 +56,7 @@ class DockerService
     public function getStats(string $name): array
     {
         try {
-            $res  = $this->client->get("/v1.43/containers/{$name}/stats?stream=false");
+            $res  = $this->client->get("/v1.44/containers/{$name}/stats?stream=false");
             $data = json_decode($res->getBody()->getContents(), true);
 
             $cpuDelta  = $data['cpu_stats']['cpu_usage']['total_usage'] - $data['precpu_stats']['cpu_usage']['total_usage'];
