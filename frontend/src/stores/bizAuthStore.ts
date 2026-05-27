@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import axios  from 'axios'
-import api    from '@/lib/api'
 import bizApi from '@/lib/bizApi'
 
 interface BizUser { id: number; name: string; email: string }
