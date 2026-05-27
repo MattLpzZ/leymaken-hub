@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\HubSetting;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -10,7 +11,7 @@ class GitHubService
 
     public function __construct(?Client $client = null)
     {
-        $token = config('services.github.token');
+        $token = HubSetting::getValue('GITHUB_TOKEN') ?? config('services.github.token');
         $this->client = $client ?? new Client([
             'base_uri' => 'https://api.github.com/',
             'headers'  => [

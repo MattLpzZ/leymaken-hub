@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\HubSetting;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -10,7 +11,7 @@ class CloudflareService
 
     public function __construct(?Client $client = null)
     {
-        $token = config('services.cloudflare.token');
+        $token = HubSetting::getValue('CLOUDFLARE_TOKEN') ?? config('services.cloudflare.token');
         $this->client = $client ?? new Client([
             'base_uri' => 'https://api.cloudflare.com/client/v4/',
             'headers'  => [

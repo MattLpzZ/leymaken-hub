@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\HubSetting;
 use GuzzleHttp\Client;
 
 class HestiaService
@@ -11,9 +12,9 @@ class HestiaService
 
     public function __construct()
     {
-        $this->host     = env('HESTIA_HOST', '');
-        $this->user     = env('HESTIA_USER', 'admin');
-        $this->password = env('HESTIA_PASSWORD', '');
+        $this->host     = HubSetting::getValue('HESTIA_HOST')     ?? env('HESTIA_HOST', '');
+        $this->user     = HubSetting::getValue('HESTIA_USER')     ?? env('HESTIA_USER', 'admin');
+        $this->password = HubSetting::getValue('HESTIA_PASSWORD') ?? env('HESTIA_PASSWORD', '');
     }
 
     public function listDomains(): array

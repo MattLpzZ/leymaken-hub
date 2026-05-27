@@ -1,12 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\HubSetting;
+use App\Models\InfraSnapshot;
+use App\Services\CloudflareService;
 use App\Services\DockerService;
 use App\Services\GitHubService;
-use App\Services\CloudflareService;
 use App\Services\HestiaService;
 use App\Services\SystemService;
-use App\Models\InfraSnapshot;
 use Illuminate\Http\JsonResponse;
 
 class InfraController extends Controller
@@ -39,7 +40,7 @@ class InfraController extends Controller
 
     public function cloudflare(): JsonResponse
     {
-        $accountId = config('services.cloudflare.account_id');
+        $accountId = HubSetting::getValue('CLOUDFLARE_ACCOUNT_ID') ?? config('services.cloudflare.account_id');
         $zones     = $this->cloudflare->listZones();
         $zones     = array_map(function ($zone) {
             $zone['analytics'] = $this->cloudflare->getZoneAnalytics($zone['id']);

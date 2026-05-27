@@ -2,6 +2,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BizController;
 use App\Http\Controllers\InfraController;
+use App\Http\Controllers\SecretsController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -12,6 +13,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // soymatt-platform auto-connect
     Route::get('/biz/connect', [BizController::class, 'connect']);
+
+    // API Key management
+    Route::get('/secrets',          [SecretsController::class, 'index']);
+    Route::put('/secrets/{key}',    [SecretsController::class, 'upsert']);
+    Route::delete('/secrets/{key}', [SecretsController::class, 'destroy']);
 
     // Mission Control
     Route::prefix('infra')->group(function () {
