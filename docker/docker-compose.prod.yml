@@ -14,7 +14,8 @@ services:
       APP_DEBUG: "false"
     env_file: ../.env
     networks:
-      - leymaken_leymaken
+      leymaken_leymaken:
+        ipv4_address: 172.18.100.10
 
   hub_api_http:
     image: nginx:alpine
