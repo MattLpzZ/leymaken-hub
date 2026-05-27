@@ -1,16 +1,22 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import api    from '@/lib/api'
 import bizApi from '@/lib/bizApi'
 
 interface BizUser { id: number; name: string; email: string }
 
 interface BizAuthStore {
-  token: string | null
-  user:  BizUser | null
-  loading: boolean
-  error: string | null
-  connect:    (email: string, password: string) => Promise<boolean>
-  disconnect: () => void
+  token:       string | null
+  user:        BizUser | null
+  loading:     boolean
+  error:       string | null
+  connect:     (email: string, password: string) => Promise<boolean>
+  autoConnect: () => Promise<void>
+  disconnect:  () => void
+}
+
+function applyToken(token: string) {
+  localStorage.setItem('biz_token', token)
 }
 
 export const useBizAuthStore = create<BizAuthStore>()(
@@ -21,13 +27,24 @@ export const useBizAuthStore = create<BizAuthStore>()(
       connect: async (email, password) => {
         set({ loading: true, error: null })
         try {
-          const { data } = await bizApi.post('/login', { email, password })
-          localStorage.setItem('biz_token', data.token)
+          const { data } = await bizApi.post('/auth/login', { email, password })
+          applyToken(data.token)
           set({ token: data.token, user: data.user, loading: false })
           return true
         } catch (err: any) {
           set({ error: err.response?.data?.message ?? 'Error de conexión', loading: false })
           return false
+        }
+      },
+
+      autoConnect: async () => {
+        set({ loading: true, error: null })
+        try {
+          const { data } = await api.get('/biz/connect')
+          applyToken(data.token)
+          set({ token: data.token, user: data.user, loading: false })
+        } catch {
+          set({ loading: false })
         }
       },
 

@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BizController;
 use App\Http\Controllers\InfraController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,6 +9,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', fn($req) => $req->user());
+
+    // soymatt-platform auto-connect
+    Route::get('/biz/connect', [BizController::class, 'connect']);
 
     // Mission Control
     Route::prefix('infra')->group(function () {

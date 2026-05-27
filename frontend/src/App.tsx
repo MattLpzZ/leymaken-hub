@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import { useBizAuthStore } from '@/stores/bizAuthStore'
 import { Layout } from '@/components/Layout'
 import { LoginPage } from '@/modules/auth/LoginPage'
 import { MissionControlPage } from '@/modules/mission-control/MissionControlPage'
@@ -16,8 +17,14 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const init = useAuthStore((s: { init: () => Promise<void> }) => s.init)
-  useEffect(() => { init() }, [init])
+  const init        = useAuthStore((s: { init: () => Promise<void> }) => s.init)
+  const autoConnect = useBizAuthStore((s) => s.autoConnect)
+
+  useEffect(() => {
+    init().then(() => {
+      if (!useBizAuthStore.getState().token) autoConnect()
+    })
+  }, [init, autoConnect])
 
   return (
     <BrowserRouter>
