@@ -1,0 +1,41 @@
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import bizApi from '@/lib/bizApi'
+
+interface BizUser { id: number; name: string; email: string }
+
+interface BizAuthStore {
+  token: string | null
+  user:  BizUser | null
+  loading: boolean
+  error: string | null
+  connect:    (email: string, password: string) => Promise<boolean>
+  disconnect: () => void
+}
+
+export const useBizAuthStore = create<BizAuthStore>()(
+  persist(
+    (set) => ({
+      token: null, user: null, loading: false, error: null,
+
+      connect: async (email, password) => {
+        set({ loading: true, error: null })
+        try {
+          const { data } = await bizApi.post('/login', { email, password })
+          localStorage.setItem('biz_token', data.token)
+          set({ token: data.token, user: data.user, loading: false })
+          return true
+        } catch (err: any) {
+          set({ error: err.response?.data?.message ?? 'Error de conexión', loading: false })
+          return false
+        }
+      },
+
+      disconnect: () => {
+        localStorage.removeItem('biz_token')
+        set({ token: null, user: null, error: null })
+      },
+    }),
+    { name: 'biz-auth', partialize: (s) => ({ token: s.token, user: s.user }) }
+  )
+)

@@ -4,6 +4,9 @@ import { useAuthStore } from '@/stores/authStore'
 import { Layout } from '@/components/Layout'
 import { LoginPage } from '@/modules/auth/LoginPage'
 import { MissionControlPage } from '@/modules/mission-control/MissionControlPage'
+import { CrmPage }      from '@/modules/crm/CrmPage'
+import { BillingPage }  from '@/modules/billing/BillingPage'
+import { SettingsPage } from '@/modules/settings/SettingsPage'
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore()
@@ -21,7 +24,10 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<RequireAuth><Layout /></RequireAuth>}>
-          <Route index element={<MissionControlPage />} />
+          <Route index         element={<MissionControlPage />} />
+          <Route path="crm"      element={<CrmPage />} />
+          <Route path="billing"  element={<BillingPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
