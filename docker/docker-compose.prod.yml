@@ -61,6 +61,8 @@ services:
       dockerfile: docker/Dockerfile.frontend
     container_name: leymaken_hub_frontend
     restart: unless-stopped
+    ports:
+      - "3010:80"
     depends_on:
       - hub_api
       - hub_api_http
