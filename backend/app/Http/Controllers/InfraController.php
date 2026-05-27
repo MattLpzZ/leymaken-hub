@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Services\DockerService;
 use App\Services\GitHubService;
 use App\Services\CloudflareService;
+use App\Services\HestiaService;
+use App\Services\SystemService;
 use App\Models\InfraSnapshot;
 use Illuminate\Http\JsonResponse;
 
@@ -13,6 +15,8 @@ class InfraController extends Controller
         private DockerService     $docker,
         private GitHubService     $github,
         private CloudflareService $cloudflare,
+        private HestiaService     $hestia,
+        private SystemService     $system,
     ) {}
 
     public function docker(): JsonResponse
@@ -44,6 +48,17 @@ class InfraController extends Controller
         $workers = $this->cloudflare->listWorkers($accountId);
 
         return response()->json(['zones' => $zones, 'workers' => $workers, 'polled_at' => now()->toISOString()]);
+    }
+
+    public function hestia(): JsonResponse
+    {
+        $domains = $this->hestia->listDomains();
+        return response()->json(['domains' => $domains, 'polled_at' => now()->toISOString()]);
+    }
+
+    public function vpsStats(): JsonResponse
+    {
+        return response()->json($this->system->getStats());
     }
 
     public function feed(): JsonResponse

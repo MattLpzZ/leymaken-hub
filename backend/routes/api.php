@@ -14,6 +14,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/docker',     [InfraController::class, 'docker']);
         Route::get('/github',     [InfraController::class, 'github']);
         Route::get('/cloudflare', [InfraController::class, 'cloudflare']);
+        Route::get('/hestia',     [InfraController::class, 'hestia']);
+        Route::get('/vps',        [InfraController::class, 'vpsStats']);
         Route::get('/feed',       [InfraController::class, 'feed']);
         Route::post('/docker/{name}/restart', [InfraController::class, 'restartContainer']);
         Route::get('/docker/{name}/logs',     [InfraController::class, 'containerLogs']);
