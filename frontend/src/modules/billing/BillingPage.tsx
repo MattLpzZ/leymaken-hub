@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FileText, DollarSign, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react'
+import { FileText, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react'
 import bizApi from '@/lib/bizApi'
 import { useBizAuthStore } from '@/stores/bizAuthStore'
 import { BizConnectPrompt } from '@/components/BizConnectPrompt'
