@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import axios  from 'axios'
 import api    from '@/lib/api'
 import bizApi from '@/lib/bizApi'
 
@@ -40,7 +41,11 @@ export const useBizAuthStore = create<BizAuthStore>()(
       autoConnect: async () => {
         set({ loading: true, error: null })
         try {
-          const { data } = await api.get('/biz/connect')
+          // Use axios directly to bypass the 401-redirect interceptor on api.ts
+          const token = localStorage.getItem('hub_token')
+          const { data } = await axios.get('/api/biz/connect', {
+            headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+          })
           applyToken(data.token)
           set({ token: data.token, user: data.user, loading: false })
         } catch {

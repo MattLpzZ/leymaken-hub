@@ -22,7 +22,8 @@ export default function App() {
 
   useEffect(() => {
     init().then(() => {
-      if (!useBizAuthStore.getState().token) autoConnect()
+      const { user } = useAuthStore.getState()
+      if (user && !useBizAuthStore.getState().token) autoConnect()
     })
   }, [init, autoConnect])
 
