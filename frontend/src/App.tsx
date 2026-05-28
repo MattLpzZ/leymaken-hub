@@ -5,7 +5,7 @@ import { useBizAuthStore } from '@/stores/bizAuthStore'
 import { Layout } from '@/components/Layout'
 import { LoginPage } from '@/modules/auth/LoginPage'
 import { MissionControlPage } from '@/modules/mission-control/MissionControlPage'
-import { CrmPage }      from '@/modules/crm/CrmPage'
+import { ClientesPage } from '@/modules/clientes/ClientesPage'
 import { BillingPage }  from '@/modules/billing/BillingPage'
 import { SettingsPage } from '@/modules/settings/SettingsPage'
 import AgendaPage       from '@/modules/agenda/AgendaPage'
@@ -42,7 +42,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<RequireAuth><Layout /></RequireAuth>}>
           <Route index             element={<MissionControlPage />} />
-          <Route path="clientes"   element={<CrmPage />} />
+          <Route path="clientes"   element={<ClientesPage />} />
           <Route path="crm"        element={<Navigate to="/clientes" replace />} />
           <Route path="billing"    element={<BillingPage />} />
           <Route path="projects"   element={<ProjectsPage />} />

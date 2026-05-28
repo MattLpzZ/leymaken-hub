@@ -5,7 +5,20 @@ import {
 } from 'lucide-react'
 import Badge from '@/components/Badge'
 import Pagination from '@/components/Pagination'
-import { ClientsService, type Client } from '@/lib/services/clients.service'
+import { ClientsService } from '@/lib/services/clients.service'
+
+interface Client {
+  id: number
+  name: string
+  email?: string
+  phone?: string
+  company?: string
+  type?: 'saas' | 'freelance' | 'project'
+  plan?: string
+  monthly_fee?: number
+  billing_day?: number
+  notes?: string
+}
 
 type PayStatus = 'paid' | 'pending' | 'overdue'
 
@@ -85,8 +98,9 @@ export default function Clients() {
   useEffect(() => {
     ClientsService.list()
       .then((data) => {
-        setClients(data)
-        const saas = data
+        const cast = data as unknown as Client[]
+        setClients(cast)
+        const saas = cast
           .filter(c => c.type === 'saas' && (c.monthly_fee ?? 0) > 0)
           .map<SaasClientLocal>(c => ({
             ...c,
@@ -141,8 +155,9 @@ export default function Clients() {
     setSaasLocal(prev => prev.filter(c => c.id !== id))
     ClientsService.remove(id).catch(() => {
       ClientsService.list().then(data => {
-        setClients(data)
-        const saas = data
+        const cast = data as unknown as Client[]
+        setClients(cast)
+        const saas = cast
           .filter(c => c.type === 'saas' && (c.monthly_fee ?? 0) > 0)
           .map<SaasClientLocal>(c => ({
             ...c,
@@ -169,12 +184,13 @@ export default function Clients() {
         billing_day: form.billing_day ? Number(form.billing_day) : undefined,
         notes: form.notes || undefined,
       }
-      const created = await ClientsService.create(payload)
-      setClients(prev => [created, ...prev])
-      if (created.type === 'saas' && (created.monthly_fee ?? 0) > 0) {
+      const created = await ClientsService.create(payload as never)
+      const createdCast = created as unknown as Client
+      setClients(prev => [createdCast, ...prev])
+      if (createdCast.type === 'saas' && (createdCast.monthly_fee ?? 0) > 0) {
         setSaasLocal(prev => [{
-          ...created,
-          sessionStatus: deriveStatus(created),
+          ...createdCast,
+          sessionStatus: deriveStatus(createdCast),
           sessionLastPaid: '',
         }, ...prev])
       }

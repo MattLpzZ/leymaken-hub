@@ -4,6 +4,7 @@ use App\Http\Controllers\AiController;
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BizController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InfraController;
 use App\Http\Controllers\SaasCompanyController;
 use App\Http\Controllers\SaasPlanController;
@@ -50,6 +51,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Users
     Route::apiResource('users', UsersController::class);
+
+    // Clients (client-centric model)
+    Route::apiResource('clients', ClientController::class);
+    Route::post('clients/{client}/services',            [ClientController::class, 'addService']);
+    Route::patch('clients/{client}/services/{service}', [ClientController::class, 'updateService']);
+    Route::delete('clients/{client}/services/{service}',[ClientController::class, 'removeService']);
 
     // AI Assistant
     Route::post('/ai/chat', [AiController::class, 'chat']);

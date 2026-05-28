@@ -3,7 +3,19 @@ import { Plus, CheckCircle, AlertCircle, Clock, XCircle, Loader2, X } from 'luci
 import Badge from '@/components/Badge'
 import StatCard from '@/components/StatCard'
 import { DollarSign, Users, TrendingUp } from 'lucide-react'
-import { ClientsService, type Client } from '@/lib/services/clients.service'
+import { ClientsService } from '@/lib/services/clients.service'
+
+interface Client {
+  id: number
+  name: string
+  email?: string
+  phone?: string
+  company?: string
+  type?: 'saas' | 'freelance' | 'project'
+  plan?: string
+  monthly_fee?: number
+  billing_day?: number
+}
 
 type SubStatus = 'active' | 'overdue' | 'paused' | 'cancelled'
 
@@ -44,7 +56,7 @@ export default function Subscriptions() {
 
   useEffect(() => {
     ClientsService.list()
-      .then(all => setClients(all.filter(c => c.type === 'saas')))
+      .then(all => setClients((all as unknown as Client[]).filter(c => c.type === 'saas')))
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
@@ -59,16 +71,12 @@ export default function Subscriptions() {
     setSaving(true)
     try {
       const created = await ClientsService.create({
-        name:        form.name,
-        email:       form.email || undefined,
-        phone:       form.phone || undefined,
-        company:     form.company || undefined,
-        type:        'saas',
-        plan:        form.plan || undefined,
-        monthly_fee: form.monthly_fee ? Number(form.monthly_fee) : undefined,
-        billing_day: form.billing_day ? Number(form.billing_day) : undefined,
-      })
-      setClients(prev => [created, ...prev])
+        name:  form.name,
+        email: form.email || undefined,
+        phone: form.phone || undefined,
+        notes: form.company ? `Empresa: ${form.company}` : undefined,
+      } as never)
+      setClients(prev => [created as unknown as Client, ...prev])
       setForm(BLANK)
       setShowForm(false)
     } catch (err) {
@@ -82,7 +90,7 @@ export default function Subscriptions() {
     if (!confirm('¿Eliminar esta suscripción?')) return
     setClients(prev => prev.filter(c => c.id !== id))
     ClientsService.remove(id).catch(() =>
-      ClientsService.list().then(all => setClients(all.filter(c => c.type === 'saas')))
+      ClientsService.list().then(all => setClients((all as unknown as Client[]).filter(c => c.type === 'saas')))
     )
   }
 
