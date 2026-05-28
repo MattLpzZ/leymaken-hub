@@ -44,6 +44,9 @@ export const InvoicesService = {
   remove: (id: number) =>
     api.delete(`/invoices/${id}`),
 
+  sendEmail: (id: number) =>
+    api.post<{ sent: boolean }>(`/invoices/${id}/send-email`).then(r => r.data),
+
   print: (id: number) =>
     api.get<string>(`/invoices/${id}/print`, {
       responseType: 'text',

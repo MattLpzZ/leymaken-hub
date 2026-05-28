@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Edit2, Trash2, ChevronRight, X, Plus, Loader2 } from 'lucide-react'
+import { Edit2, Trash2, ChevronRight, X, Plus, Loader2, FileText } from 'lucide-react'
 import { ClientsService } from '@/lib/services/clients.service'
 import type { Client, ClientService } from '@/lib/services/clients.service'
 
@@ -86,6 +86,8 @@ export function ClientesPage() {
   const [saving, setSaving] = useState(false)
   const [showServiceForm, setShowServiceForm] = useState(false)
   const [serviceForm, setServiceForm] = useState({ ...EMPTY_SVC_FORM })
+  const [generatingInvoice, setGeneratingInvoice] = useState(false)
+  const [invoiceMsg, setInvoiceMsg] = useState<string | null>(null)
 
   useEffect(() => {
     ClientsService.list().then(setClients).catch(() => {}).finally(() => setLoading(false))
@@ -157,6 +159,21 @@ export function ClientesPage() {
       setServiceForm({ ...EMPTY_SVC_FORM })
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleGenerateInvoice() {
+    if (!selected) return
+    setGeneratingInvoice(true)
+    setInvoiceMsg(null)
+    try {
+      await ClientsService.generateInvoice(selected.id)
+      setInvoiceMsg('Factura generada correctamente')
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
+      setInvoiceMsg(msg ?? 'Error al generar factura')
+    } finally {
+      setGeneratingInvoice(false)
     }
   }
 
@@ -385,13 +402,28 @@ export function ClientesPage() {
             </div>
 
             <div
-              className="p-4 flex items-center justify-between"
+              className="p-4 space-y-3"
               style={{ borderTop: '1px solid var(--border)' }}
             >
-              <span className="text-xs" style={{ color: 'var(--text-3)' }}>MRR total</span>
-              <span className="font-mono text-sm text-emerald-400 font-semibold">
-                {formatMrr(selected.services.filter(s => s.status === 'active').reduce((sum, s) => sum + s.monthly_value, 0))}
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-xs" style={{ color: 'var(--text-3)' }}>MRR total</span>
+                <span className="font-mono text-sm text-emerald-400 font-semibold">
+                  {formatMrr(selected.services.filter(s => s.status === 'active').reduce((sum, s) => sum + s.monthly_value, 0))}
+                </span>
+              </div>
+              {invoiceMsg && (
+                <p className="text-xs text-center" style={{ color: invoiceMsg.startsWith('Factura') ? 'var(--color-emerald-400, #34d399)' : 'var(--color-red-400, #f87171)' }}>
+                  {invoiceMsg}
+                </p>
+              )}
+              <button
+                className="btn-primary w-full flex items-center justify-center gap-1.5"
+                onClick={handleGenerateInvoice}
+                disabled={generatingInvoice}
+              >
+                {generatingInvoice ? <Loader2 size={13} className="animate-spin" /> : <FileText size={13} />}
+                Generar factura mensual
+              </button>
             </div>
           </div>
         </>

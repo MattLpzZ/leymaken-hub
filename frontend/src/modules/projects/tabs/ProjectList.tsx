@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus, ChevronDown, ChevronUp, Square, Circle, CheckSquare, AlertCircle, Clock, CheckCircle, Loader2, X } from 'lucide-react'
 import Badge from '@/components/Badge'
 import { ProjectsService, type Project, type Task } from '@/lib/services/projects.service'
+import { ClientsService, type Client } from '@/lib/services/clients.service'
 
 type TaskStatus = 'todo' | 'doing' | 'done'
 
@@ -21,17 +22,22 @@ const taskStatusColor: Record<TaskStatus, string> = {
 
 export default function ProjectList() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [clients, setClients]   = useState<Client[]>([])
   const [loading, setLoading]   = useState(true)
   const [saving, setSaving]     = useState(false)
   const [expanded, setExpanded] = useState<number | null>(null)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm]         = useState({ name: '', budget: '', deadline: '', description: '' })
+  const [form, setForm]         = useState({ name: '', client_id: '', budget: '', deadline: '', description: '' })
 
   useEffect(() => {
-    ProjectsService.list()
-      .then(data => { setProjects(data); if (data[0]) setExpanded(data[0].id!) })
-      .catch(console.error)
-      .finally(() => setLoading(false))
+    Promise.all([
+      ProjectsService.list(),
+      ClientsService.list(),
+    ]).then(([p, c]) => {
+      setProjects(p)
+      setClients(c)
+      if (p[0]) setExpanded(p[0].id!)
+    }).catch(console.error).finally(() => setLoading(false))
   }, [])
 
   const toggleTask = async (pId: number, task: Task) => {
@@ -48,13 +54,14 @@ export default function ProjectList() {
     try {
       const created = await ProjectsService.create({
         name: form.name,
+        client_id: form.client_id ? parseInt(form.client_id) : undefined,
         budget: parseFloat(form.budget) || 0,
         deadline: form.deadline || undefined,
         description: form.description || undefined,
         status: 'active',
       })
       setProjects(prev => [created, ...prev])
-      setForm({ name: '', budget: '', deadline: '', description: '' })
+      setForm({ name: '', client_id: '', budget: '', deadline: '', description: '' })
       setShowForm(false)
     } catch (err) { console.error(err) }
     finally { setSaving(false) }
@@ -109,6 +116,13 @@ export default function ProjectList() {
               <div>
                 <label className="label">Nombre del proyecto</label>
                 <input required className="input" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">Cliente (opcional)</label>
+                <select className="input" value={form.client_id} onChange={e => setForm(f => ({ ...f, client_id: e.target.value }))}>
+                  <option value="">Sin cliente</option>
+                  {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>

@@ -40,4 +40,6 @@ export const ClientsService = {
     api.patch<ClientService>(`/clients/${clientId}/services/${serviceId}`, data).then(r => r.data),
   removeService: (clientId: number, serviceId: number) =>
     api.delete(`/clients/${clientId}/services/${serviceId}`),
+  generateInvoice: (clientId: number) =>
+    api.post(`/clients/${clientId}/generate-invoice`).then(r => r.data),
 }

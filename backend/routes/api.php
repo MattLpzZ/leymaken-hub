@@ -63,17 +63,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Clients (client-centric model)
     Route::apiResource('clients', ClientController::class);
-    Route::post('clients/{client}/services',            [ClientController::class, 'addService']);
-    Route::patch('clients/{client}/services/{service}', [ClientController::class, 'updateService']);
-    Route::delete('clients/{client}/services/{service}',[ClientController::class, 'removeService']);
+    Route::post('clients/{client}/services',                [ClientController::class, 'addService']);
+    Route::patch('clients/{client}/services/{service}',     [ClientController::class, 'updateService']);
+    Route::delete('clients/{client}/services/{service}',    [ClientController::class, 'removeService']);
+    Route::post('clients/{client}/generate-invoice',        [ClientController::class, 'generateInvoice']);
 
     // Invoices
     Route::get('/invoices',              [InvoiceController::class, 'index']);
     Route::post('/invoices',             [InvoiceController::class, 'store']);
     Route::get('/invoices/{invoice}',    [InvoiceController::class, 'show']);
     Route::put('/invoices/{invoice}',    [InvoiceController::class, 'update']);
-    Route::patch('/invoices/{invoice}/mark-paid', [InvoiceController::class, 'markPaid']);
-    Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy']);
+    Route::patch('/invoices/{invoice}/mark-paid',   [InvoiceController::class, 'markPaid']);
+    Route::post('/invoices/{invoice}/send-email',   [InvoiceController::class, 'sendEmail']);
+    Route::get('/invoices/{invoice}/print',         [InvoiceController::class, 'printView']);
+    Route::delete('/invoices/{invoice}',            [InvoiceController::class, 'destroy']);
 
     // Quotes
     Route::get('/quotes',             [QuoteController::class, 'index']);
