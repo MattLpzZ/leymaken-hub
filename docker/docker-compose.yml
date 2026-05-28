@@ -10,7 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ../.env
     networks:
-      - leymaken_net
+      - leymaken_leymaken
 
   hub_api_http:
     image: nginx:alpine
@@ -22,7 +22,7 @@ services:
     depends_on:
       - hub_api
     networks:
-      - leymaken_net
+      - leymaken_leymaken
 
   hub_frontend:
     build:
@@ -36,8 +36,8 @@ services:
       - hub_api
       - hub_api_http
     networks:
-      - leymaken_net
+      - leymaken_leymaken
 
 networks:
-  leymaken_net:
+  leymaken_leymaken:
     external: true
