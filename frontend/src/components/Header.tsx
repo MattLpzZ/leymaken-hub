@@ -4,22 +4,21 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { useAiStore } from '@/stores/aiStore'
 import { NotificationsDropdown } from './NotificationsDropdown'
+import { ModuleHelpButton } from './ModuleHelpButton'
 
 const NAV_ITEMS = [
-  { label: 'Control Hub',    href: '/' },
-  { label: 'Clientes',       href: '/clientes' },
-  { label: 'Agenda',         href: '/agenda' },
-  { label: 'Suite',          href: '/suite' },
-  { label: 'Ubicado',        href: '/ubicado' },
-  { label: 'Automatización', href: '/automation' },
-  { label: 'Proyectos',      href: '/projects' },
-  { label: 'Facturación',    href: '/billing' },
-  { label: 'Caja',           href: '/caja' },
-  { label: 'Finanzas',       href: '/finance' },
-  { label: 'Infraestructura',href: '/infra' },
-  { label: 'CMM',            href: '/cmm' },
-  { label: 'Soporte',        href: '/support' },
-  { label: 'Configuración',  href: '/settings' },
+  { label: 'Control Hub',     href: '/' },
+  { label: 'Clientes',        href: '/clientes' },
+  { label: 'Agenda',          href: '/agenda' },
+  { label: 'Suite',           href: '/suite' },
+  { label: 'Ubicado',         href: '/ubicado' },
+  { label: 'Automatización',  href: '/automation' },
+  { label: 'Proyectos',       href: '/projects' },
+  { label: 'Facturación',     href: '/billing' },
+  { label: 'Caja',            href: '/caja' },
+  { label: 'Finanzas',        href: '/finance' },
+  { label: 'Infraestructura', href: '/infra' },
+  { label: 'Configuración',   href: '/settings' },
 ]
 
 export function Header() {
@@ -93,6 +92,8 @@ export function Header() {
 
       {/* Right */}
       <div className="flex items-center gap-2">
+        <ModuleHelpButton />
+
         <button
           className="p-1.5 rounded transition-colors hover:bg-gray-800"
           onClick={toggle}

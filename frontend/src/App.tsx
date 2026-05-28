@@ -8,12 +8,10 @@ import { MissionControlPage } from '@/modules/mission-control/MissionControlPage
 import { CrmPage }      from '@/modules/crm/CrmPage'
 import { BillingPage }  from '@/modules/billing/BillingPage'
 import { SettingsPage } from '@/modules/settings/SettingsPage'
-import { CmmPage }      from '@/modules/cmm/CmmPage'
 import AgendaPage       from '@/modules/agenda/AgendaPage'
 import CajaPage         from '@/modules/caja/CajaPage'
 import StatusPage       from '@/modules/status/StatusPage'
 import AutomationPage   from '@/modules/automation/AutomationPage'
-import SupportPage      from '@/modules/support/SupportPage'
 import FinancePage      from '@/modules/finance/FinancePage'
 import ProjectsPage     from '@/modules/projects/ProjectsPage'
 import { SuitePage }    from '@/modules/suite/SuitePage'
@@ -50,8 +48,6 @@ export default function App() {
           <Route path="projects"   element={<ProjectsPage />} />
           <Route path="agenda"     element={<AgendaPage />} />
           <Route path="automation" element={<AutomationPage />} />
-          <Route path="cmm"        element={<CmmPage />} />
-          <Route path="support"    element={<SupportPage />} />
           <Route path="caja"       element={<CajaPage />} />
           <Route path="finance"    element={<FinancePage />} />
           <Route path="infra"      element={<InfraPage />} />
