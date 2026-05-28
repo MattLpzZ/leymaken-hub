@@ -1,8 +1,11 @@
 <?php
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BizController;
 use App\Http\Controllers\InfraController;
 use App\Http\Controllers\SecretsController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -30,4 +33,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/docker/{name}/restart', [InfraController::class, 'restartContainer']);
         Route::get('/docker/{name}/logs',     [InfraController::class, 'containerLogs']);
     });
+
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index']);
+    Route::patch('/settings', [SettingsController::class, 'update']);
+    Route::post('/settings/test-email', [SettingsController::class, 'testEmail']);
+
+    // Users
+    Route::apiResource('users', UsersController::class);
+
+    // Activity
+    Route::get('/activity/stream', [ActivityController::class, 'stream']);
+    Route::get('/activity/recent', [ActivityController::class, 'recent']);
+    Route::post('/activity', [ActivityController::class, 'store']);
 });

@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Bot, Users, FileText, Settings,
   Home, Calendar, FolderKanban,
   Zap, Megaphone, LifeBuoy, Wallet, TrendingUp,
-  Monitor, Activity, Wrench,
+  Monitor, Wrench,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -23,7 +23,6 @@ const nav = [
   { label: 'Finanzas',        icon: TrendingUp,      href: '/finance' },
   // System
   { label: 'Desktop',         icon: Monitor,         href: '/desktop' },
-  { label: 'Estado',          icon: Activity,        href: '/status' },
   { label: 'Herramientas',    icon: Wrench,          href: '/tools' },
   { label: 'Agente',          icon: Bot,             href: '/agent' },
   { label: 'Configuración',   icon: Settings,        href: '/settings' },
