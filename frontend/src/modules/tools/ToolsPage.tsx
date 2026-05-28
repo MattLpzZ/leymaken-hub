@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Github, ArrowLeft, ExternalLink, Copy, Check,
+  GitBranch, ArrowLeft, ExternalLink, Copy, Check,
   Settings, BookOpen, Play, Wrench, ChevronRight,
   Terminal, AlertCircle,
 } from 'lucide-react'
@@ -226,7 +226,7 @@ function ToolDetail({
         <span className="text-gray-700">/</span>
         <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{tool.name}</span>
         <a href={tool.github} target="_blank" rel="noopener noreferrer" className="ml-auto text-gray-600 hover:text-gray-300 transition-colors">
-          <Github size={15} />
+          <GitBranch size={15} />
         </a>
       </div>
 
