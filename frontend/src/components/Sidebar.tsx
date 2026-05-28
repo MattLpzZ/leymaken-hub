@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Bot, Users, FileText, Settings,
   Home, Calendar, FolderKanban,
   Zap, Megaphone, LifeBuoy, Wallet, TrendingUp,
-  Monitor, Wrench,
+  Monitor, Wrench, Layers, MapPin,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -16,6 +16,8 @@ const nav = [
   { label: 'Proyectos',       icon: FolderKanban,    href: '/projects' },
   { label: 'Agenda',          icon: Calendar,        href: '/agenda' },
   // Operations
+  { label: 'Suite',           icon: Layers,          href: '/suite' },
+  { label: 'Ubicado',         icon: MapPin,          href: '/ubicado' },
   { label: 'Automatización',  icon: Zap,             href: '/automation' },
   { label: 'CMM',             icon: Megaphone,       href: '/cmm' },
   { label: 'Soporte',         icon: LifeBuoy,        href: '/support' },

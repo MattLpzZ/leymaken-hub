@@ -4,7 +4,7 @@ import {
   Mail, Printer, Users, ScrollText, Shield, Loader2, Check,
   Eye, EyeOff, Send, Plus, Trash2, Edit2, X,
 } from 'lucide-react'
-import api from '@/lib/bizApi'
+import api from '@/lib/api'
 import { SettingsService, UsersService, type HubSettings, type HubUser } from '@/lib/services/settings.service'
 
 const TABS = [

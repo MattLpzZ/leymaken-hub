@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Activity, Circle } from 'lucide-react'
-import api from '@/lib/bizApi'
+import api from '@/lib/api'
 
 interface LogEntry {
   id: number
@@ -40,11 +40,11 @@ export function ActivityTicker() {
 
   // SSE connection
   useEffect(() => {
-    const token = localStorage.getItem('biz_token')
+    const token = localStorage.getItem('hub_token')
     if (!token) return
 
     const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api'
-    const url = `${baseUrl}/activity/stream`
+    const url = `${baseUrl}/activity/stream?token=${encodeURIComponent(token)}`
 
     const connect = () => {
       const es = new EventSource(url)

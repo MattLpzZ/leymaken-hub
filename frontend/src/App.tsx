@@ -19,6 +19,8 @@ import AutomationPage   from '@/modules/automation/AutomationPage'
 import SupportPage      from '@/modules/support/SupportPage'
 import FinancePage      from '@/modules/finance/FinancePage'
 import ProjectsPage     from '@/modules/projects/ProjectsPage'
+import { SuitePage }    from '@/modules/suite/SuitePage'
+import { UbicadoPage }  from '@/modules/ubicado/UbicadoPage'
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore()
@@ -57,6 +59,8 @@ export default function App() {
           <Route path="desktop"     element={<DesktopPage />} />
           <Route path="status"      element={<StatusPage />} />
           <Route path="tools"       element={<ToolsPage />} />
+          <Route path="suite"       element={<SuitePage />} />
+          <Route path="ubicado"     element={<UbicadoPage />} />
           <Route path="settings"    element={<SettingsPage />} />
         </Route>
       </Routes>

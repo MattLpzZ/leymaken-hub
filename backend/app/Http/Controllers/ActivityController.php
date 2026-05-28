@@ -3,12 +3,18 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ActivityController extends Controller
 {
-    public function stream(): StreamedResponse
+    public function stream(Request $request): StreamedResponse
     {
+        $token = $request->query('token');
+        if (!$token || !PersonalAccessToken::findToken($token)) {
+            abort(401, 'Unauthorized');
+        }
+
         return response()->stream(function () {
             $lastId = 0;
             $attempts = 0;

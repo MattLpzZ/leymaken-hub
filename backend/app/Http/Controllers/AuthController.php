@@ -30,4 +30,22 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'ok']);
     }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password'     => 'required|min:8',
+        ]);
+
+        $user = $request->user();
+
+        if (!\Hash::check($request->current_password, $user->password)) {
+            return response()->json(['message' => 'Contraseña actual incorrecta'], 422);
+        }
+
+        $user->update(['password' => $request->new_password]);
+
+        return response()->json(['message' => 'Contraseña actualizada']);
+    }
 }
