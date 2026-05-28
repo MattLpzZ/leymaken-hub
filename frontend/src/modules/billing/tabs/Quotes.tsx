@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Eye, Send, CheckCircle, XCircle, Clock, FileText, Copy, X, Trash2, Loader2, Download, Mail } from 'lucide-react'
+import { Plus, CheckCircle, XCircle, Clock, FileText, Copy, X, Trash2, Loader2, Download, Mail } from 'lucide-react'
 import api from '@/lib/bizApi'
 import Badge from '@/components/Badge'
 import Pagination from '@/components/Pagination'

@@ -5,15 +5,8 @@ import StatCard from '@/components/StatCard'
 import { DollarSign, Users, TrendingUp } from 'lucide-react'
 import { ClientsService, type Client } from '@/lib/services/clients.service'
 
-type BillingCycle = 'monthly' | 'yearly' | 'quarterly'
-type SubStatus    = 'active' | 'overdue' | 'paused' | 'cancelled'
+type SubStatus = 'active' | 'overdue' | 'paused' | 'cancelled'
 
-const cycleLabel: Record<BillingCycle, string> = {
-  monthly: 'Mensual', yearly: 'Anual', quarterly: 'Trimestral',
-}
-const cycleFactor: Record<BillingCycle, number> = {
-  monthly: 1, quarterly: 1 / 3, yearly: 1 / 12,
-}
 const statusMap: Record<SubStatus, { label: string; color: 'green'|'red'|'amber'|'gray'; icon: React.ElementType }> = {
   active:    { label: 'Activo',    color: 'green', icon: CheckCircle },
   overdue:   { label: 'Vencido',   color: 'red',   icon: AlertCircle },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ExternalLink, Github, RefreshCw, Globe } from 'lucide-react'
+import { ExternalLink, GitBranch, RefreshCw, Globe } from 'lucide-react'
 
 interface Project {
   name: string
@@ -105,7 +105,7 @@ export default function PortfolioPage() {
         <div className="flex flex-wrap gap-2">
           <a href="https://github.com/MattLpzZ" target="_blank" rel="noopener noreferrer"
             className="btn-secondary text-xs py-1.5 flex items-center gap-1.5">
-            <Github size={12} /> GitHub
+            <GitBranch size={12} /> GitHub
           </a>
           <a href="https://soymattlpzz.com" target="_blank" rel="noopener noreferrer"
             className="btn-secondary text-xs py-1.5 flex items-center gap-1.5">

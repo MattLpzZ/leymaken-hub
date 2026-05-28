@@ -226,7 +226,7 @@ const ITEM_BLANK: Partial<BotMenuItem> = {
   response_type: 'static', response_field: null, response_template: null, active: true, sort_order: 0,
 }
 
-function MenuTab({ bot, onUpdate }: { bot: BotConfig; onUpdate: (b: BotConfig) => void }) {
+function MenuTab({ bot, onUpdate: _onUpdate }: { bot: BotConfig; onUpdate: (b: BotConfig) => void }) {
   const [items, setItems] = useState<BotMenuItem[]>(bot.menu_items ?? [])
   const [editing, setEditing] = useState<Partial<BotMenuItem> | null>(null)
   const [editId, setEditId] = useState<number | null>(null)
@@ -559,7 +559,7 @@ export default function WhatsAppBotsTab() {
   const [form, setForm] = useState(BLANK_FORM)
   const [saving, setSaving] = useState(false)
   const [selected, setSelected] = useState<BotConfig | null>(null)
-  const [evoStates, setEvoStates] = useState<Record<number, string>>({})
+  const [_evoStates, setEvoStates] = useState<Record<number, string>>({})
   const { copied, copy } = useCopy()
 
   useEffect(() => { load() }, [])
