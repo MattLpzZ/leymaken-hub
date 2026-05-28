@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BizController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InfraController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SaasCompanyController;
 use App\Http\Controllers\SaasPlanController;
 use App\Http\Controllers\SecretsController;
@@ -57,6 +59,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('clients/{client}/services',            [ClientController::class, 'addService']);
     Route::patch('clients/{client}/services/{service}', [ClientController::class, 'updateService']);
     Route::delete('clients/{client}/services/{service}',[ClientController::class, 'removeService']);
+
+    // Invoices
+    Route::get('/invoices',              [InvoiceController::class, 'index']);
+    Route::post('/invoices',             [InvoiceController::class, 'store']);
+    Route::get('/invoices/{invoice}',    [InvoiceController::class, 'show']);
+    Route::put('/invoices/{invoice}',    [InvoiceController::class, 'update']);
+    Route::patch('/invoices/{invoice}/mark-paid', [InvoiceController::class, 'markPaid']);
+    Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy']);
+
+    // Quotes
+    Route::get('/quotes',             [QuoteController::class, 'index']);
+    Route::post('/quotes',            [QuoteController::class, 'store']);
+    Route::get('/quotes/{quote}',     [QuoteController::class, 'show']);
+    Route::put('/quotes/{quote}',     [QuoteController::class, 'update']);
+    Route::post('/quotes/{quote}/convert', [QuoteController::class, 'convert']);
+    Route::delete('/quotes/{quote}',  [QuoteController::class, 'destroy']);
 
     // AI Assistant
     Route::post('/ai/chat', [AiController::class, 'chat']);

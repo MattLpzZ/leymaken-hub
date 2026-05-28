@@ -1,4 +1,4 @@
-import api from '@/lib/bizApi'
+import api from '@/lib/api'
 import type { Client } from './clients.service'
 
 export interface InvoiceItem {
