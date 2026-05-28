@@ -75,3 +75,49 @@ body {
 .badge-red    { background: #7f1d1d20; color: #f87171; }
 .badge-yellow { background: #78350f20; color: #fbbf24; }
 .badge-gray   { background: var(--surface-2); color: var(--text-2); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter { animation: fadeIn 0.18s ease both; }
+
+.card { transition: border-color 0.15s ease; }
+
+.btn-primary { transition: filter 0.15s ease, transform 0.1s ease; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary { transition: background 0.15s ease, border-color 0.15s ease; }
+.btn-secondary:hover { border-color: #4b5563; background: #374151; }
+
+.input { transition: border-color 0.15s ease; }
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  color: var(--text-2);
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+.table-header {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-row { border-bottom: 1px solid var(--border); transition: background 0.1s ease; }
+.table-row:hover { background: var(--surface-2); }
+
+.table-cell { padding: 0.6rem 0.75rem; font-size: 0.8125rem; }

@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DashboardService, type DashboardStats } from '@/lib/services/dashboard.service'
 import {
-  Users, DollarSign, Megaphone, Code2, Bot,
+  Users, DollarSign, Layers, Code2, Zap,
   ArrowRight, Activity, FileText,
   Wallet, MessageSquare, CalendarDays,
-  Lightbulb, LayoutList, CheckCircle2, Kanban,
-  TrendingUp, Clock,
+  MapPin, CheckCircle2, Kanban,
+  TrendingUp, Server,
 } from 'lucide-react'
 
 const DAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
@@ -153,13 +153,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard
           label="Clientes activos"
           value={s ? String(s.agency_clients) : '—'}
           icon={Users}
           color="bg-emerald-600"
-          onClick={() => navigate('/crm')}
+          onClick={() => navigate('/clientes')}
         />
         <StatCard
           label="MRR mensual"
@@ -167,7 +167,7 @@ export default function DashboardPage() {
           sub={s && s.agency_clients > 0 ? `${s.agency_clients} cliente${s.agency_clients !== 1 ? 's' : ''}` : undefined}
           icon={TrendingUp}
           color="bg-emerald-700"
-          onClick={() => navigate('/crm')}
+          onClick={() => navigate('/clientes')}
         />
         <StatCard
           label="Facturado este mes"
@@ -175,6 +175,14 @@ export default function DashboardPage() {
           icon={DollarSign}
           color="bg-sky-700"
           onClick={() => navigate('/billing')}
+        />
+        <StatCard
+          label="Infraestructura"
+          value="VPS"
+          sub="online"
+          icon={Server}
+          color="bg-gray-700"
+          onClick={() => navigate('/infra')}
         />
       </div>
 
@@ -195,44 +203,56 @@ export default function DashboardPage() {
 
       <div>
         <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>
-          Servicios
+          Negocios
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
 
           <ServiceBlock
-            icon={Megaphone}
-            label="Marketing / CMM"
-            color="bg-pink-500/15"
-            iconColor="text-pink-400"
-            metric={s ? s.cmm_clients : '—'}
-            metricLabel="clientes CMM"
+            icon={Layers}
+            label="Suite"
+            color="bg-emerald-500/15"
+            iconColor="text-emerald-400"
+            metricLabel="SaaS subscriptions"
             links={[
-              { label: 'Calendario de contenido', href: '/cmm',  icon: CalendarDays },
-              { label: 'Publicaciones',            href: '/cmm',  icon: LayoutList   },
-              { label: 'Banco de ideas',           href: '/cmm',  icon: Lightbulb    },
+              { label: 'Subscripciones',    href: '/suite', icon: Layers },
+              { label: 'Planes',            href: '/suite', icon: FileText },
             ]}
           />
 
           <ServiceBlock
-            icon={Code2}
-            label="Desarrollo"
-            color="bg-sky-500/15"
-            iconColor="text-sky-400"
+            icon={MapPin}
+            label="Ubicado"
+            color="bg-amber-500/15"
+            iconColor="text-amber-400"
+            metricLabel="plataforma inmobiliaria"
             links={[
-              { label: 'Proyectos web', href: '/projects', icon: Code2 },
+              { label: 'Propiedades',  href: '/ubicado', icon: MapPin },
+              { label: 'Vendedores',   href: '/ubicado', icon: Users },
             ]}
           />
 
           <ServiceBlock
-            icon={Bot}
-            label="Automatizaciones"
+            icon={Zap}
+            label="Automatización"
             color="bg-violet-500/15"
             iconColor="text-violet-400"
             metric={s ? s.agents_active : '—'}
             metricLabel="agentes activos"
             links={[
-              { label: 'Agentes IA y workflows', href: '/automation', icon: Bot   },
-              { label: 'Cola de publicación',    href: '/automation', icon: Clock },
+              { label: 'Flujos n8n',         href: '/automation', icon: Zap   },
+              { label: 'Agentes WhatsApp',   href: '/automation', icon: MessageSquare },
+            ]}
+          />
+
+          <ServiceBlock
+            icon={Code2}
+            label="Proyectos"
+            color="bg-sky-500/15"
+            iconColor="text-sky-400"
+            metricLabel="desarrollo a la medida"
+            links={[
+              { label: 'Proyectos activos', href: '/projects', icon: Code2 },
+              { label: 'Calendario',        href: '/agenda',   icon: CalendarDays },
             ]}
           />
 
@@ -245,13 +265,14 @@ export default function DashboardPage() {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
-            { href: '/crm',      label: 'Pipeline',        icon: Kanban        },
-            { href: '/crm',      label: 'Clientes activos', icon: CheckCircle2 },
-            { href: '/support',  label: 'Feedback',         icon: MessageSquare },
+            { href: '/clientes', label: 'Pipeline',         icon: Kanban        },
+            { href: '/clientes', label: 'Clientes activos', icon: CheckCircle2  },
+            { href: '/support',  label: 'Soporte',          icon: MessageSquare },
             { href: '/caja',     label: 'Caja',             icon: Wallet        },
             { href: '/billing',  label: 'Facturación',      icon: FileText      },
             { href: '/agenda',   label: 'Agenda',           icon: CalendarDays  },
             { href: '/finance',  label: 'Finanzas',         icon: DollarSign    },
+            { href: '/infra',    label: 'Infraestructura',  icon: Server        },
           ].map(({ href, label, icon: Icon }) => (
             <button
               key={label}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   Building2, User, Settings2, Palette, Bell, MessageCircle,
   Mail, Printer, Users, ScrollText, Shield, Loader2, Check,
-  Eye, EyeOff, Send, Plus, Trash2, Edit2, X,
+  Eye, EyeOff, Send, Plus, Trash2, Edit2, X, Zap,
 } from 'lucide-react'
 import api from '@/lib/api'
 import { SettingsService, UsersService, type HubSettings, type HubUser } from '@/lib/services/settings.service'
@@ -100,11 +100,44 @@ export function SettingsPage() {
   const [testEmailTo, setTestEmailTo] = useState('')
   const [testEmailStatus, setTestEmailStatus] = useState<'idle'|'sending'|'ok'|'error'>('idle')
 
+  // n8n test
+  const [n8nStatus, setN8nStatus] = useState<'idle'|'testing'|'ok'|'error'>('idle')
+
+  // Telegram test
+  const [tgStatus, setTgStatus] = useState<'idle'|'sending'|'ok'|'error'>('idle')
+
+  // Logs
+  const [logs, setLogs] = useState<any[]>([])
+  const [logsLoading, setLogsLoading] = useState(false)
+
+  const applyAccent = (colorId: string) => {
+    const map: Record<string, string> = {
+      emerald: '#10b981',
+      blue:    '#3b82f6',
+      violet:  '#8b5cf6',
+      rose:    '#f43f5e',
+      amber:   '#f59e0b',
+      cyan:    '#06b6d4',
+    }
+    const hex = map[colorId]
+    if (hex) document.documentElement.style.setProperty('--accent', hex)
+  }
+
   useEffect(() => {
     SettingsService.get()
-      .then(s => { setSettings(s); setLoading(false) })
+      .then(s => {
+        setSettings(s)
+        if (s.appearance_color) applyAccent(s.appearance_color)
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    if (tab !== 'logs') return
+    setLogsLoading(true)
+    api.get('/activity/recent').then(r => setLogs(r.data)).catch(() => {}).finally(() => setLogsLoading(false))
+  }, [tab])
 
   useEffect(() => {
     if (tab === 'usuarios' && users.length === 0) {
@@ -239,6 +272,29 @@ export function SettingsPage() {
                   </div>
                 </div>
               </div>
+              <div className="flex items-center gap-3 pt-2 border-t border-gray-800">
+                <button
+                  onClick={async () => {
+                    if (!settings.system_n8n_url) return
+                    setN8nStatus('testing')
+                    try {
+                      await api.get('/settings/test-n8n', { params: { url: settings.system_n8n_url } })
+                      setN8nStatus('ok')
+                    } catch {
+                      setN8nStatus('error')
+                    } finally {
+                      setTimeout(() => setN8nStatus('idle'), 4000)
+                    }
+                  }}
+                  disabled={n8nStatus === 'testing' || !settings.system_n8n_url}
+                  className="btn-secondary text-xs py-1.5 flex items-center gap-2 disabled:opacity-50"
+                >
+                  {n8nStatus === 'testing' ? <Loader2 size={13} className="animate-spin" /> : <Zap size={13} />}
+                  {n8nStatus === 'ok' ? 'Conectado ✓' : n8nStatus === 'error' ? 'Sin conexión' : 'Probar conexión n8n'}
+                </button>
+                {n8nStatus === 'ok' && <span className="text-xs text-emerald-400">n8n responde correctamente</span>}
+                {n8nStatus === 'error' && <span className="text-xs text-red-400">No se pudo conectar con n8n</span>}
+              </div>
               <SaveBar saving={saving} saved={saved} onSave={save} />
             </>
           )}
@@ -270,7 +326,7 @@ export function SettingsPage() {
                       { id: 'amber', color: 'bg-amber-500' },
                       { id: 'cyan', color: 'bg-cyan-500' },
                     ].map(c => (
-                      <button key={c.id} onClick={() => set('appearance_color', c.id)}
+                      <button key={c.id} onClick={() => { set('appearance_color', c.id); applyAccent(c.id) }}
                         className={`w-8 h-8 rounded-full ${c.color} ring-2 ring-offset-2 ring-offset-gray-900 transition-all ${settings.appearance_color === c.id ? 'ring-white' : 'ring-transparent'}`} />
                     ))}
                   </div>
@@ -314,6 +370,31 @@ export function SettingsPage() {
                     <option value="error">Solo errores</option>
                   </select>
                 </div>
+              </div>
+              <div className="flex items-center gap-3 pt-2 border-t border-gray-800">
+                <button
+                  onClick={async () => {
+                    setTgStatus('sending')
+                    try {
+                      await api.post('/settings/test-telegram', {
+                        bot_token: settings.telegram_bot_token,
+                        chat_id: settings.telegram_chat_id,
+                      })
+                      setTgStatus('ok')
+                    } catch {
+                      setTgStatus('error')
+                    } finally {
+                      setTimeout(() => setTgStatus('idle'), 4000)
+                    }
+                  }}
+                  disabled={tgStatus === 'sending' || !settings.telegram_bot_token || !settings.telegram_chat_id}
+                  className="btn-secondary text-xs py-1.5 flex items-center gap-2 disabled:opacity-50"
+                >
+                  {tgStatus === 'sending' ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
+                  {tgStatus === 'ok' ? 'Enviado ✓' : tgStatus === 'error' ? 'Error al enviar' : 'Enviar mensaje de prueba'}
+                </button>
+                {tgStatus === 'ok' && <span className="text-xs text-emerald-400">Mensaje enviado</span>}
+                {tgStatus === 'error' && <span className="text-xs text-red-400">Revisa el token y chat ID</span>}
               </div>
               <SaveBar saving={saving} saved={saved} onSave={save} />
             </>
@@ -509,11 +590,39 @@ export function SettingsPage() {
             <>
               <h2 className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>Registro de actividad</h2>
               <p className="text-xs" style={{ color: 'var(--text-3)' }}>Los logs se muestran también en tiempo real en el ticker inferior.</p>
-              <div className="card p-0 overflow-hidden">
-                <div className="flex items-center justify-center py-12">
-                  <p className="text-sm" style={{ color: 'var(--text-3)' }}>Ver el ticker en tiempo real abajo en la pantalla.</p>
+              {logsLoading ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 size={20} className="animate-spin text-emerald-400" />
                 </div>
-              </div>
+              ) : logs.length === 0 ? (
+                <div className="card flex items-center justify-center py-12">
+                  <p className="text-sm" style={{ color: 'var(--text-3)' }}>No hay actividad registrada.</p>
+                </div>
+              ) : (
+                <div className="space-y-0">
+                  {logs.slice(0, 50).map((entry, i) => {
+                    const dotColor =
+                      entry.type === 'success' || entry.type === 'info' ? 'bg-emerald-500' :
+                      entry.type === 'warning' ? 'bg-amber-500' :
+                      entry.type === 'error' ? 'bg-red-500' :
+                      'bg-gray-500'
+                    return (
+                      <div key={entry.id ?? i} className="flex gap-4 py-3 border-b border-gray-800/60 last:border-0">
+                        <div className="flex flex-col items-center pt-1 flex-shrink-0">
+                          <div className={`w-2 h-2 rounded-full ${dotColor}`} />
+                          {i < logs.slice(0, 50).length - 1 && <div className="w-px flex-1 bg-gray-800 mt-1.5" />}
+                        </div>
+                        <div className="flex-1 min-w-0 pb-1">
+                          <p className="text-sm" style={{ color: 'var(--text-1)' }}>{entry.description}</p>
+                          <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                            {new Date(entry.created_at).toLocaleString('es-DO')}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </>
           )}
 

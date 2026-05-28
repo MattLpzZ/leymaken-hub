@@ -1,26 +1,25 @@
 import { useState, useRef } from 'react'
-import { Search, Sparkles } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Search, Sparkles, Settings } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { useAiStore } from '@/stores/aiStore'
+import { NotificationsDropdown } from './NotificationsDropdown'
 
 const NAV_ITEMS = [
-  { label: 'Mission Control', href: '/' },
-  { label: 'Dashboard',       href: '/dashboard' },
-  { label: 'CRM',             href: '/crm' },
-  { label: 'Facturación',     href: '/billing' },
-  { label: 'Proyectos',       href: '/projects' },
-  { label: 'Agenda',          href: '/agenda' },
-  { label: 'Suite',           href: '/suite' },
-  { label: 'Ubicado',         href: '/ubicado' },
-  { label: 'Automatización',  href: '/automation' },
-  { label: 'CMM',             href: '/cmm' },
-  { label: 'Soporte',         href: '/support' },
-  { label: 'Caja',            href: '/caja' },
-  { label: 'Finanzas',        href: '/finance' },
-  { label: 'Desktop',         href: '/desktop' },
-  { label: 'Herramientas',    href: '/tools' },
-  { label: 'Configuración',   href: '/settings' },
+  { label: 'Control Hub',    href: '/' },
+  { label: 'Clientes',       href: '/clientes' },
+  { label: 'Agenda',         href: '/agenda' },
+  { label: 'Suite',          href: '/suite' },
+  { label: 'Ubicado',        href: '/ubicado' },
+  { label: 'Automatización', href: '/automation' },
+  { label: 'Proyectos',      href: '/projects' },
+  { label: 'Facturación',    href: '/billing' },
+  { label: 'Caja',           href: '/caja' },
+  { label: 'Finanzas',       href: '/finance' },
+  { label: 'Infraestructura',href: '/infra' },
+  { label: 'CMM',            href: '/cmm' },
+  { label: 'Soporte',        href: '/support' },
+  { label: 'Configuración',  href: '/settings' },
 ]
 
 export function Header() {
@@ -33,9 +32,7 @@ export function Header() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const results = query.trim()
-    ? NAV_ITEMS.filter((item) =>
-        item.label.toLowerCase().includes(query.toLowerCase())
-      ).slice(0, 5)
+    ? NAV_ITEMS.filter(item => item.label.toLowerCase().includes(query.toLowerCase())).slice(0, 5)
     : []
 
   function handleSelect(href: string) {
@@ -61,26 +58,15 @@ export function Header() {
       {/* Center — search */}
       <div className="relative" style={{ width: 200 }}>
         <div className="relative flex items-center">
-          <Search
-            size={13}
-            className="absolute left-2.5 pointer-events-none"
-            style={{ color: 'var(--text-3)' }}
-          />
+          <Search size={13} className="absolute left-2.5 pointer-events-none" style={{ color: 'var(--text-3)' }} />
           <input
             ref={inputRef}
             type="text"
             className="input text-xs w-full"
-            style={{
-              paddingLeft: '1.75rem',
-              background: '#111827',
-              borderColor: '#1f2937',
-            }}
+            style={{ paddingLeft: '1.75rem', background: '#111827', borderColor: '#1f2937' }}
             placeholder="Buscar módulo..."
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value)
-              setShowDropdown(true)
-            }}
+            onChange={e => { setQuery(e.target.value); setShowDropdown(true) }}
             onFocus={() => setShowDropdown(true)}
             onBlur={handleBlur}
           />
@@ -88,13 +74,9 @@ export function Header() {
         {showDropdown && results.length > 0 && (
           <div
             className="absolute top-full left-0 mt-1 w-full rounded-lg overflow-hidden z-50"
-            style={{
-              background: 'var(--surface)',
-              border: '1px solid var(--border)',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-            }}
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
           >
-            {results.map((item) => (
+            {results.map(item => (
               <button
                 key={item.href}
                 className="w-full text-left px-3 py-2 text-xs transition-colors hover:bg-gray-800 flex items-center justify-between"
@@ -110,18 +92,26 @@ export function Header() {
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <button
           className="p-1.5 rounded transition-colors hover:bg-gray-800"
           onClick={toggle}
           title="Asistente IA"
         >
-          <Sparkles
-            size={16}
-            style={{ color: aiOpen ? '#10b981' : 'var(--text-3)' }}
-          />
+          <Sparkles size={16} style={{ color: aiOpen ? '#10b981' : 'var(--text-3)' }} />
         </button>
-        <span style={{ color: 'var(--text-3)', fontSize: '0.75rem' }}>|</span>
+
+        <NotificationsDropdown />
+
+        <Link
+          to="/settings"
+          className="p-1.5 rounded transition-colors hover:bg-gray-800"
+          title="Configuración"
+        >
+          <Settings size={16} style={{ color: 'var(--text-3)' }} />
+        </Link>
+
+        <span style={{ color: 'var(--text-3)', fontSize: '0.75rem', margin: '0 4px' }}>|</span>
         <span style={{ color: 'var(--text-2)', fontSize: '0.875rem' }}>{user?.name}</span>
         <button className="btn-secondary text-xs" onClick={logout}>Salir</button>
       </div>

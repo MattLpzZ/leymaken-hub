@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\HubSetting;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class SettingsController extends Controller
@@ -57,6 +58,42 @@ class SettingsController extends Controller
             return ['ok' => true];
         } catch (\Throwable $e) {
             return ['ok' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function testN8n(Request $request)
+    {
+        $url = $request->query('url');
+        if (empty($url)) return response()->json(['error' => 'No URL provided'], 422);
+
+        try {
+            $response = Http::timeout(5)->get(rtrim($url, '/') . '/healthz');
+            if ($response->ok() || $response->status() === 404) {
+                return response()->json(['ok' => true]);
+            }
+            return response()->json(['ok' => false], 502);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'error' => $e->getMessage()], 502);
+        }
+    }
+
+    public function testTelegram(Request $request)
+    {
+        $token  = $request->input('bot_token');
+        $chatId = $request->input('chat_id');
+        if (empty($token) || empty($chatId)) return response()->json(['error' => 'Missing params'], 422);
+
+        try {
+            $response = Http::timeout(8)->post("https://api.telegram.org/bot{$token}/sendMessage", [
+                'chat_id' => $chatId,
+                'text'    => '✅ Leymaken Hub — mensaje de prueba',
+            ]);
+            if ($response->ok() && $response->json('ok')) {
+                return response()->json(['ok' => true]);
+            }
+            return response()->json(['ok' => false, 'error' => $response->json('description')], 502);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'error' => $e->getMessage()], 502);
         }
     }
 }

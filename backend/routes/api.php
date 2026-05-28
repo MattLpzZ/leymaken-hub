@@ -45,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index']);
     Route::patch('/settings', [SettingsController::class, 'update']);
     Route::post('/settings/test-email', [SettingsController::class, 'testEmail']);
+    Route::get('/settings/test-n8n', [SettingsController::class, 'testN8n']);
+    Route::post('/settings/test-telegram', [SettingsController::class, 'testTelegram']);
 
     // Users
     Route::apiResource('users', UsersController::class);

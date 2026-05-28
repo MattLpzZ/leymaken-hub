@@ -1,5 +1,5 @@
-import { DashboardGrid } from './DashboardGrid'
+import DashboardPage from '@/modules/home/DashboardPage'
 
 export function MissionControlPage() {
-  return <DashboardGrid />
+  return <DashboardPage />
 }
