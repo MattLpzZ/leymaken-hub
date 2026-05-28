@@ -1,13 +1,32 @@
 import { useLocation, Link } from 'react-router-dom'
-import { LayoutDashboard, Bot, Users, FileText, Settings } from 'lucide-react'
+import {
+  LayoutDashboard, Bot, Users, FileText, Settings,
+  Home, Calendar, FolderKanban,
+  Zap, Megaphone, LifeBuoy, Wallet, TrendingUp,
+  Monitor, Activity, Wrench,
+} from 'lucide-react'
 import { useState } from 'react'
 
 const nav = [
+  // Main
   { label: 'Mission Control', icon: LayoutDashboard, href: '/' },
-  { label: 'Agente',          icon: Bot,              href: '/agent' },
-  { label: 'CRM',             icon: Users,            href: '/crm' },
-  { label: 'Facturación',     icon: FileText,         href: '/billing' },
-  { label: 'Configuración',   icon: Settings,         href: '/settings' },
+  { label: 'Dashboard',       icon: Home,            href: '/dashboard' },
+  { label: 'CRM',             icon: Users,           href: '/crm' },
+  { label: 'Facturación',     icon: FileText,        href: '/billing' },
+  { label: 'Proyectos',       icon: FolderKanban,    href: '/projects' },
+  { label: 'Agenda',          icon: Calendar,        href: '/agenda' },
+  // Operations
+  { label: 'Automatización',  icon: Zap,             href: '/automation' },
+  { label: 'CMM',             icon: Megaphone,       href: '/cmm' },
+  { label: 'Soporte',         icon: LifeBuoy,        href: '/support' },
+  { label: 'Caja',            icon: Wallet,          href: '/caja' },
+  { label: 'Finanzas',        icon: TrendingUp,      href: '/finance' },
+  // System
+  { label: 'Desktop',         icon: Monitor,         href: '/desktop' },
+  { label: 'Estado',          icon: Activity,        href: '/status' },
+  { label: 'Herramientas',    icon: Wrench,          href: '/tools' },
+  { label: 'Agente',          icon: Bot,             href: '/agent' },
+  { label: 'Configuración',   icon: Settings,        href: '/settings' },
 ]
 
 export function Sidebar() {
