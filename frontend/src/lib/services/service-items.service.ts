@@ -1,4 +1,4 @@
-import api from '@/lib/bizApi'
+import api from '@/lib/api'
 
 export interface ServiceItem {
   id: number

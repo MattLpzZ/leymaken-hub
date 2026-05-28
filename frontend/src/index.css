@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+html { font-size: 14px; }
+
 :root {
   --app-bg:    #030712;
   --surface:   #111827;
@@ -21,15 +23,25 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
-  padding: 1.25rem;
+  padding: 1rem;
+}
+
+.card-sm {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
   background: var(--accent);
   color: #fff;
-  padding: 0.5rem 1rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 0.375rem;
-  font-size: 0.875rem;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   border: none;
@@ -38,12 +50,15 @@ body {
 .btn-primary:hover { filter: brightness(1.1); }
 
 .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
   background: var(--surface-2);
   color: var(--text-1);
   border: 1px solid var(--border);
-  padding: 0.5rem 1rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 0.375rem;
-  font-size: 0.875rem;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -51,9 +66,9 @@ body {
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--text-1);
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.625rem;
   border-radius: 0.375rem;
-  font-size: 0.875rem;
+  font-size: 12px;
   width: 100%;
 }
 

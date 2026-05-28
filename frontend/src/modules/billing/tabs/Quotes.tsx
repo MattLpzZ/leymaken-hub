@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Plus, CheckCircle, XCircle, Clock, FileText, Copy, X, Trash2, Loader2, Download, Mail } from 'lucide-react'
-import api from '@/lib/bizApi'
+import api from '@/lib/api'
 import Badge from '@/components/Badge'
 import Pagination from '@/components/Pagination'
 import StatCard from '@/components/StatCard'

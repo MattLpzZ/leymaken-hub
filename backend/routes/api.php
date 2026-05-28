@@ -5,14 +5,21 @@ use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BizController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InfraController;
+use App\Http\Controllers\InvoiceCategoryController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\SaasCompanyController;
 use App\Http\Controllers\SaasPlanController;
+use App\Http\Controllers\ScheduledController;
 use App\Http\Controllers\SecretsController;
+use App\Http\Controllers\ServiceItemController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SuiteController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +82,57 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/quotes/{quote}',     [QuoteController::class, 'update']);
     Route::post('/quotes/{quote}/convert', [QuoteController::class, 'convert']);
     Route::delete('/quotes/{quote}',  [QuoteController::class, 'destroy']);
+
+    // Dashboard stats
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+
+    // Reminders (Agenda)
+    Route::get('/reminders',                     [ReminderController::class, 'index']);
+    Route::post('/reminders',                    [ReminderController::class, 'store']);
+    Route::put('/reminders/{reminder}',          [ReminderController::class, 'update']);
+    Route::patch('/reminders/{reminder}/complete',[ReminderController::class, 'complete']);
+    Route::patch('/reminders/{reminder}/dismiss', [ReminderController::class, 'dismiss']);
+    Route::delete('/reminders/{reminder}',       [ReminderController::class, 'destroy']);
+
+    // Projects
+    Route::get('/projects',                [ProjectController::class, 'index']);
+    Route::post('/projects',               [ProjectController::class, 'store']);
+    Route::put('/projects/{project}',      [ProjectController::class, 'update']);
+    Route::delete('/projects/{project}',   [ProjectController::class, 'destroy']);
+    Route::post('/projects/{project}/tasks',      [ProjectController::class, 'createTask']);
+    Route::patch('/tasks/{task}/status',          [ProjectController::class, 'updateTaskStatus']);
+    Route::delete('/tasks/{task}',                [ProjectController::class, 'deleteTask']);
+    Route::get('/time-entries',                   [ProjectController::class, 'timeEntries']);
+    Route::post('/time-entries',                  [ProjectController::class, 'createTimeEntry']);
+    Route::post('/time-entries/stop',             [ProjectController::class, 'stopTimeEntry']);
+    Route::delete('/time-entries/{entry}',        [ProjectController::class, 'deleteTimeEntry']);
+
+    // Transactions (Caja)
+    Route::get('/transactions',               [TransactionController::class, 'index']);
+    Route::post('/transactions',              [TransactionController::class, 'store']);
+    Route::put('/transactions/{transaction}', [TransactionController::class, 'update']);
+    Route::delete('/transactions/{transaction}',[TransactionController::class, 'destroy']);
+    Route::get('/transactions/summary/monthly',[TransactionController::class, 'monthlySummary']);
+
+    // Scheduled transactions (Finance)
+    Route::get('/scheduled-transactions',                          [ScheduledController::class, 'index']);
+    Route::post('/scheduled-transactions',                         [ScheduledController::class, 'store']);
+    Route::put('/scheduled-transactions/{scheduled}',              [ScheduledController::class, 'update']);
+    Route::patch('/scheduled-transactions/{scheduled}/toggle',     [ScheduledController::class, 'toggle']);
+    Route::post('/scheduled-transactions/{scheduled}/execute',     [ScheduledController::class, 'execute']);
+    Route::delete('/scheduled-transactions/{scheduled}',           [ScheduledController::class, 'destroy']);
+
+    // Billing categories
+    Route::get('/invoice-categories',                       [InvoiceCategoryController::class, 'index']);
+    Route::post('/invoice-categories',                      [InvoiceCategoryController::class, 'store']);
+    Route::put('/invoice-categories/{invoiceCategory}',     [InvoiceCategoryController::class, 'update']);
+    Route::delete('/invoice-categories/{invoiceCategory}',  [InvoiceCategoryController::class, 'destroy']);
+
+    // Service items (catalog)
+    Route::get('/service-items',                [ServiceItemController::class, 'index']);
+    Route::post('/service-items',               [ServiceItemController::class, 'store']);
+    Route::put('/service-items/{serviceItem}',  [ServiceItemController::class, 'update']);
+    Route::delete('/service-items/{serviceItem}',[ServiceItemController::class, 'destroy']);
 
     // AI Assistant
     Route::post('/ai/chat', [AiController::class, 'chat']);

@@ -6,7 +6,7 @@ import {
 import Badge from '@/components/Badge'
 import Pagination from '@/components/Pagination'
 import StatCard from '@/components/StatCard'
-import api from '@/lib/bizApi'
+import api from '@/lib/api'
 import { InvoicesService, type Invoice, type InvoiceItem } from '@/lib/services/invoices.service'
 import { ClientsService, type Client } from '@/lib/services/clients.service'
 
