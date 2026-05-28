@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AiController;
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BizController;
@@ -47,6 +48,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Users
     Route::apiResource('users', UsersController::class);
+
+    // AI Assistant
+    Route::post('/ai/chat', [AiController::class, 'chat']);
+    Route::get('/ai/status', [AiController::class, 'status']);
 
     // Activity
     Route::get('/activity/recent', [ActivityController::class, 'recent']);
